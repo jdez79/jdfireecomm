@@ -1,17 +1,20 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type { Product } from '../types/types';
-import { loadCartFromSessionStorage, saveCartToSessionStorage } from '../utils/sessionStorage';
 
-interface CartItem extends Product {
+export interface CartItem extends Product {
   quantity: number;
 }
 
 interface CartState {
   items: CartItem[];
+  totalQuantity: number;
+  totalPrice: number;
 }
 
 const initialState: CartState = {
-  items: loadCartFromSessionStorage(),
+  items: [],
+  totalQuantity: 0,
+  totalPrice: 0,
 };
 
 const cartSlice = createSlice({
@@ -27,35 +30,60 @@ const cartSlice = createSlice({
         state.items.push({ ...action.payload, quantity: 1 });
       }
       
-      saveCartToSessionStorage(state.items);
+      state.totalQuantity += 1;
+      state.totalPrice += action.payload.price;
     },
     
     removeFromCart: (state, action: PayloadAction<number>) => {
-      state.items = state.items.filter(item => item.id !== action.payload);
-      saveCartToSessionStorage(state.items);
+      const existingItem = state.items.find(item => item.id === action.payload);
+      
+      if (existingItem) {
+        state.totalQuantity -= existingItem.quantity;
+        state.totalPrice -= existingItem.price * existingItem.quantity;
+        state.items = state.items.filter(item => item.id !== action.payload);
+      }
     },
     
-    updateQuantity: (state, action: PayloadAction<{ id: number; quantity: number }>) => {
-      const item = state.items.find(item => item.id === action.payload.id);
-      if (item) {
-        item.quantity = action.payload.quantity;
-        saveCartToSessionStorage(state.items);
+    incrementQuantity: (state, action: PayloadAction<number>) => {
+      const existingItem = state.items.find(item => item.id === action.payload);
+      
+      if (existingItem) {
+        existingItem.quantity += 1;
+        state.totalQuantity += 1;
+        state.totalPrice += existingItem.price;
+      }
+    },
+    
+    decrementQuantity: (state, action: PayloadAction<number>) => {
+      const existingItem = state.items.find(item => item.id === action.payload);
+      
+      if (existingItem) {
+        if (existingItem.quantity === 1) {
+          state.totalQuantity -= 1;
+          state.totalPrice -= existingItem.price;
+          state.items = state.items.filter(item => item.id !== action.payload);
+        } else {
+          existingItem.quantity -= 1;
+          state.totalQuantity -= 1;
+          state.totalPrice -= existingItem.price;
+        }
       }
     },
     
     clearCart: (state) => {
       state.items = [];
-      saveCartToSessionStorage([]);
+      state.totalQuantity = 0;
+      state.totalPrice = 0;
     },
   },
 });
 
-export const { addToCart, removeFromCart, updateQuantity, clearCart } = cartSlice.actions;
-export default cartSlice.reducer;
+export const { 
+  addToCart, 
+  removeFromCart, 
+  incrementQuantity, 
+  decrementQuantity, 
+  clearCart 
+} = cartSlice.actions;
 
-// Selectors
-export const selectCartItems = (state: { cart: CartState }) => state.cart.items;
-export const selectCartTotal = (state: { cart: CartState }) => 
-  state.cart.items.reduce((total, item) => total + (item.price * item.quantity), 0);
-export const selectCartItemCount = (state: { cart: CartState }) => 
-  state.cart.items.reduce((count, item) => count + item.quantity, 0);
+export default cartSlice.reducer;

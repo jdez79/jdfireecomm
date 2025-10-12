@@ -1,37 +1,37 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Provider } from 'react-redux';
-import { store } from './store/store';
+import { Routes, Route } from 'react-router-dom';
+import Home from './pages/Home/Home.tsx';
+import Profile from './pages/Profile';
 import { ProductProvider } from './context/ProductContext';
-import NavigationBar from './components/Navbar';
-import Home from './pages/Home';
-import ShoppingCart from './components/ShoppingCart';
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
+import { AuthProvider } from './context/AuthContext';
+import Cart from './pages/Cart';
+import OrderHistory from './pages/OrderHistory';
+import Register from './pages/Register';
+import Login from './pages/Login';
+import Logout from './pages/Logout';
+import Navbar from './components/Navbar/Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      retry: 1,
-    },
-  },
-});
-
 function App() {
+  const client = new QueryClient;
+
   return (
-    <Provider store={store}>
-      <QueryClientProvider client={queryClient}>
+      <QueryClientProvider client={client}>
         <ProductProvider>
-          <Router>
-            <NavigationBar />
+          <AuthProvider>
+            <Navbar />
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/cart" element={<ShoppingCart />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/order-history" element={<OrderHistory />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/logout" element={<Logout />} />
             </Routes>
-          </Router>
+          </AuthProvider>
         </ProductProvider>
       </QueryClientProvider>
-    </Provider>
   );
 }
 

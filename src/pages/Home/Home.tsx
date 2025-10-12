@@ -1,9 +1,9 @@
 import { useEffect } from "react";
-import type { Product } from "../types/types";
-import ProductCard from '../components/ProductCard';
-import { useProductContext } from "../context/ProductContext";
+import type { Product } from "../../types/types";
+import ProductCard from '../../components/ProductCard';
+import { useProductContext } from "../../context/ProductContext";
 import { useQuery } from "@tanstack/react-query";
-import { fetchProducts, fetchCategories } from "../api/api";
+import { fetchProducts, fetchCategories } from "../../api/api";
 import { Container, Row, Col, Form, Button, Spinner } from 'react-bootstrap';
 
 const Home: React.FC = () => {
@@ -15,8 +15,9 @@ const Home: React.FC = () => {
   });
 
   useEffect(() => {
-    if (productsData)
+    if (productsData) {
       dispatch({ type: 'SET_PRODUCTS', payload: productsData?.data });
+    }
   }, [dispatch, productsData]);
 
   const { data: categories } = useQuery({

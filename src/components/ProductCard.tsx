@@ -47,7 +47,7 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
       <Card style={{ width: '18rem' }} className="h-100 shadow-sm">
         <div className="p-3 d-flex justify-content-center" style={{ height: '200px' }}>
           <Card.Img 
-            variant="top" 
+            variant="top"
             src={imgError ? `https://via.placeholder.com/150?text=${encodeURIComponent(product.title)}` : product.image}
             alt={product.title}
             style={{ objectFit: 'contain', maxHeight: '100%', width: 'auto' }}
@@ -62,13 +62,13 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
             <Badge bg="secondary">{product.category}</Badge>
           </Card.Text>
           <Card.Text 
-            className="flex-grow-1" 
-            style={{ 
-              overflow: 'hidden', 
-              textOverflow: 'ellipsis', 
-              display: '-webkit-box', 
-              WebkitLineClamp: 3, 
-              WebkitBoxOrient: 'vertical' 
+            className="flex-grow-1"
+            style={{
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              display: '-webkit-box',
+              WebkitLineClamp: 3,
+              WebkitBoxOrient: 'vertical'
             }}
           >
             {product.description}
@@ -84,7 +84,7 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
           <div className="d-flex justify-content-between align-items-center mt-auto">
             <h5 className="text-success mb-0">${product.price.toFixed(2)}</h5>
             <Button 
-              variant="primary" 
+              variant="primary"
               size="sm"
               onClick={handleAddToCart}
             >
@@ -96,9 +96,9 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
 
       <ToastContainer position="top-end" className="p-3">
         <Toast 
-          show={showToast} 
-          onClose={() => setShowToast(false)} 
-          delay={3000} 
+          show={showToast}
+          onClose={() => setShowToast(false)}
+          delay={3000}
           autohide
           bg="success"
         >
