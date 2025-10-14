@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { updateProfile, deleteUser } from "firebase/auth";
-import { Container, Form, Button, Alert } from 'react-bootstrap';
-import "../styles/auth-styles.css"
+import { Form, Button, Alert } from 'react-bootstrap';
+import "../styles/auth-styles.css";
 
 const Profile: React.FC = () => {
   const { user } = useAuth();
@@ -60,11 +60,11 @@ const Profile: React.FC = () => {
   };
 
   return (
-    <Container className="mt-5" style={{ maxWidth: '500px' }}>
-      <h1 className="mb-4">Profile</h1>
+    <div className='form-container'>
+      <h1>Profile</h1>
       
-      {success && <Alert variant="success">{success}</Alert>}
-      {error && <Alert variant="danger">{error}</Alert>}
+      {success && <p className="success">{success}</p>}
+      {error && <p className="danger">{error}</p>}
 
       <Form onSubmit={handleUpdateProfile}>
         <Form.Group className="mb-3">
@@ -107,12 +107,13 @@ const Profile: React.FC = () => {
         <Button 
           variant="danger"
           onClick={handleDeleteAccount}
+          className="deleteAccountButton"
           disabled={loading}
         >
           {loading ? 'Deleting...' : 'Delete Account'}
         </Button>
       </div>
-    </Container>
+    </div>
   );
 };
 
