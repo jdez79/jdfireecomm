@@ -1,35 +1,41 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import type { Product } from "../../types/types";
 import ProductCard from '../../components/ProductCard';
-import { useProductContext } from "../../context/ProductContext";
-import { useQuery } from "@tanstack/react-query";
-import { fetchProducts, fetchCategories } from "../../api/api";
 import { Container, Row, Col, Form, Button, Spinner } from 'react-bootstrap';
+import { collection, getDocs } from "firebase/firestore";
+import { db } from '../../lib/firebase/firebase';
 
 const Home: React.FC = () => {
-  const { products, selectedCategory, dispatch } = useProductContext();
-
-  const { data: productsData, isLoading } = useQuery({
-    queryKey: ['products'],
-    queryFn: fetchProducts,
-  });
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (productsData) {
-      dispatch({ type: 'SET_PRODUCTS', payload: productsData?.data });
-    }
-  }, [dispatch, productsData]);
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const productsCol = collection(db, "products");
+        const productSnapshot = await getDocs(productsCol);
+        const productsData = productSnapshot.docs.map(doc => ({ ...(doc.data() as Product), id: doc.id }));
+        setProducts(productsData);
 
-  const { data: categories } = useQuery({
-    queryKey: ['categories'],
-    queryFn: fetchCategories,
-  });
+        // Extract unique categories
+        const uniqueCategories = Array.from(new Set(productsData.map(p => p.category ?? '').filter(Boolean)));
+        setCategories(uniqueCategories);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const getFilteredProducts = () => {
+    fetchProducts();
+  }, []);
+
+  const getFilteredProducts = (): Product[] => {
     if (selectedCategory) {
-      return products.filter(
-        (product: Product) => product.category === selectedCategory
-      );
+      return products.filter((product) => product.category === selectedCategory);
     }
     return products;
   };
@@ -44,13 +50,12 @@ const Home: React.FC = () => {
           <div className="d-flex gap-3 align-items-center flex-wrap">
             <Form.Select
               style={{ width: '300px' }}
-              onChange={(e) =>
-                dispatch({ type: 'SET_SELECTED_CATEGORY', payload: e.target.value })
-              }
+              onChange={(e) => setSelectedCategory(e.target.value)}
               value={selectedCategory}
+              aria-label="Filter products by category"
             >
               <option value=''>All Categories</option>
-              {categories?.data.map((category: string) => (
+              {categories.map((category) => (
                 <option value={category} key={category}>
                   {category.charAt(0).toUpperCase() + category.slice(1)}
                 </option>
@@ -59,7 +64,8 @@ const Home: React.FC = () => {
             {selectedCategory && (
               <Button
                 variant="outline-secondary"
-                onClick={() => dispatch({ type: "SET_SELECTED_CATEGORY", payload: '' })}
+                onClick={() => setSelectedCategory('')}
+                aria-label="Clear category filter"
               >
                 Clear Filter
               </Button>
@@ -68,25 +74,23 @@ const Home: React.FC = () => {
         </Col>
       </Row>
 
-      {isLoading && (
+      {loading ? (
         <div className="text-center my-5">
           <Spinner animation="border" role="status">
             <span className="visually-hidden">Loading...</span>
           </Spinner>
           <h3 className="mt-3">Loading products...</h3>
         </div>
-      )}
-
-      <Row xs={1} md={2} lg={3} xl={4} className="g-4">
-        {filteredProducts.map((product: Product) => (
-          <Col key={product.id}>
-            <ProductCard product={product} />
-          </Col>
-        ))}
-      </Row>
-
-      {!isLoading && filteredProducts.length === 0 && (
-        <div className="text-center my-5">
+      ) : filteredProducts.length > 0 ? (
+        <Row xs={1} md={2} lg={3} xl={4} className="g-4">
+          {filteredProducts.map((product: Product) => (
+            <Col key={product.id}>
+              <ProductCard product={product} />
+            </Col>
+          ))}
+        </Row>
+      ) : (
+        <div className="text-center my-5" role="alert">
           <h3>No products found in this category</h3>
         </div>
       )}

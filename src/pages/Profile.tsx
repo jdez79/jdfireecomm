@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { updateProfile, deleteUser } from "firebase/auth";
 import { Container, Form, Button, Alert } from 'react-bootstrap';
+import "../styles/auth-styles.css"
 
 const Profile: React.FC = () => {
   const { user } = useAuth();

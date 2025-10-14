@@ -75,14 +75,18 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
           </Card.Text>
           <div className="mb-2 d-flex align-items-center gap-1">
             <div className="d-flex">
-              {renderStars(product.rating.rate)}
+              {product.rating && typeof product.rating.rate === 'number' ? renderStars(product.rating.rate) : null}
             </div>
             <small className="text-muted ms-1">
-              {product.rating.rate.toFixed(1)} ({product.rating.count} reviews)
+              {product.rating && typeof product.rating.rate === 'number'
+                ? `${product.rating.rate.toFixed(1)} (${product.rating.count} reviews)`
+                : 'No reviews'}
             </small>
           </div>
           <div className="d-flex justify-content-between align-items-center mt-auto">
-            <h5 className="text-success mb-0">${product.price.toFixed(2)}</h5>
+            <h5 className="text-success mb-0">
+              Price: ${typeof product.price === 'number' ? product.price.toFixed(2) : 'N/A'}
+            </h5>
             <Button 
               variant="primary"
               size="sm"

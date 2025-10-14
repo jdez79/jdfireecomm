@@ -1,16 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../store/hooks';
-import { 
-  removeFromCart, 
-  incrementQuantity, 
-  decrementQuantity, 
-  clearCart 
-} from '../store/cartSlice';
+import { removeFromCart, incrementQuantity, decrementQuantity, clearCart } from '../store/cartSlice';
 import { useAuth } from '../context/AuthContext';
-import { db } from '../lib/Firebase/firebase';
+import { db } from "../lib/firebase/firebase";
 import { collection, addDoc, Timestamp } from 'firebase/firestore';
 import { Container, Row, Col, Card, Button, ListGroup, Badge, Alert, Spinner, Modal } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 const Cart: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -182,10 +178,11 @@ const Cart: React.FC = () => {
               </div>
 
               {!user && (
-                <Alert variant="warning" className="small">
-                  Please <Alert.Link href="/login">login</Alert.Link> to place an order
-                </Alert>
-              )}
+             <Alert variant="warning" className="small">
+             Please <Link to="/login" className="alert-link">login</Link> to place an order
+           </Alert>
+          )}
+
 
               <Button 
                 variant="primary" 
