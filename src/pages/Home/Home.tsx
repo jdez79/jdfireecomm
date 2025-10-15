@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import type { Product } from "../../types/types";
 import ProductCard from '../../components/ProductCard';
 import { Container, Row, Col, Form, Button, Spinner } from 'react-bootstrap';
-import { collection, getDocs } from "Firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { db } from '../../lib/Firebase/firebase';
 
 const Home: React.FC = () => {
