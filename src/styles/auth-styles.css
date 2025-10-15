@@ -49,3 +49,6 @@
         border-radius: 5px;
         cursor: pointer;
     }
+    .danger {
+        color: red;
+}

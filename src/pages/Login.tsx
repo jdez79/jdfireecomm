@@ -10,37 +10,31 @@ const Login = () => {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
 
-    const {user} = useAuth();
-    
+    const { user } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
         if (user) {
             navigate("/profile");
         }
-    },[user, navigate]);
+    }, [user, navigate]);
 
-    // Handle form submission
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setError("");
         try {
-            await signInWithEmailAndPassword(
-                auth, 
-                email, 
-                password
-            );
+            await signInWithEmailAndPassword(auth, email, password);
             navigate("/profile");
         } catch (error: any) {
             setError(error.message);
         }
     };
-    
+
     return (
-        <div className='form-container'>
+        <div className="form-container">
             <h1>Login</h1>
             <form onSubmit={handleSubmit}>
-                {error && <p className='error'>{error}</p>}
+                {error && <p className="error">{error}</p>}
                 <fieldset>
                     <legend>Login</legend>
                     <input
@@ -56,10 +50,10 @@ const Login = () => {
                         onChange={(e) => setPassword(e.target.value)}
                     />
                     <button type="submit">Login</button>
-                   </fieldset>
-                  </form>
-                 </div>
-               );
-              };
+                </fieldset>
+            </form>
+        </div>
+    );
+};
 
 export default Login;

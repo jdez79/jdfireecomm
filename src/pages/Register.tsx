@@ -9,35 +9,25 @@ const Register = () => {
     const [password, setPassword] = useState("");
     const [displayName, setDisplayName] = useState("");
     const [error, setError] = useState("");
-
     const navigate = useNavigate();
 
-    // Handle form submission
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setError("");
         try {
-            // Create user with email and password using Firebase auth
-            const userCredential = await createUserWithEmailAndPassword(
-                auth, 
-                email, 
-                password
-            );
-            // Update user profile with displayName after user is created
-             await updateProfile(userCredential.user, {
-                displayName: displayName,   
-            });
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            await updateProfile(userCredential.user, { displayName });
             navigate("/profile");
         } catch (error: any) {
             setError(error.message);
         }
     };
-    
+
     return (
         <div className="form-container">
             <h1>Register</h1>
             <form onSubmit={handleSubmit}>
-                {error && <p className='error'>{error}</p>}
+                {error && <p className="error">{error}</p>}
                 <fieldset>
                     <legend>Register</legend>
                     <input
@@ -46,7 +36,7 @@ const Register = () => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
-                     <input
+                    <input
                         type="text"
                         placeholder="Name"
                         value={displayName}
@@ -59,9 +49,10 @@ const Register = () => {
                         onChange={(e) => setPassword(e.target.value)}
                     />
                     <button type="submit">Register</button>
-                   </fieldset>
-                  </form>
-                 </div>
-               );
-              };
+                </fieldset>
+            </form>
+        </div>
+    );
+};
+
 export default Register;
