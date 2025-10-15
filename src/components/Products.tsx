@@ -1,7 +1,7 @@
 // src/components/Products.tsx
 import { useState, useEffect } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../firebase';
+import { db } from '../Firebase/firebase';
 
 const Products = () => {
   const [products, setProducts] = useState([]);

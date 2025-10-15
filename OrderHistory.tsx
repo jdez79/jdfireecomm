@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { db } from '../lib/firebase/firebase';
+import { db } from '../lib/Firebase/firebase';
 import { collection, query, where, orderBy, getDocs } from 'firebase/firestore';
 import { Container, ListGroup, Spinner, Button, Alert } from 'react-bootstrap';
 

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../store/hooks';
 import { removeFromCart, incrementQuantity, decrementQuantity, clearCart } from '../store/cartSlice';
 import { useAuth } from '../context/AuthContext';
-import { db } from "../lib/firebase/firebase";
+import { db } from "../lib/Firebase/firebase";
 import { collection, addDoc, Timestamp } from 'firebase/firestore';
 import { Container, Row, Col, Card, Button, ListGroup, Badge, Alert, Spinner, Modal } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
