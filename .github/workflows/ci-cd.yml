@@ -10,7 +10,7 @@ on:
       - main
 
 jobs:
-  test:
+  build: # continuous integration
     runs-on: ubuntu-latest
 
     steps:
@@ -35,4 +35,28 @@ jobs:
         #Step 5: Build React App
       - name: Build React App
         run: npm run build
+        
+  deploy: # continuous deployment
+    runs-on: ubuntu-latest
+    needs: build #Only run deploy after the build job has succeded
+    steps:
+      # Step 1: Checkout the repository code
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Step 2: Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20' # Use a Node.js version compatible with your React app
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Step 4: Deploy to Vercel
+      - name: Deploy to Vercel
+        run: |
+          npm install -g vercel
+          vercel --prod --yes --token ${{secrets.VERCEL_TOKEN}}
         
