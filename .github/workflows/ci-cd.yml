@@ -30,8 +30,8 @@ jobs:
 
       # Step 4: Run tests
       - name: Run tests
-        run: npm test -- --watchAll=false
-
+        run: npm test
+        
         #Step 5: Build React App
       - name: Build React App
         run: npm run build
