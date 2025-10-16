@@ -1,4 +1,5 @@
 Advanced React E-Commerce Application
+Vercel hosting @ jdfireecomm.vercel.app
 A modern e-commerce web application built with React, TypeScript, Redux Toolkit, and React Query, featuring a complete shopping cart system with persistent storage.
 
 🚀 Features
